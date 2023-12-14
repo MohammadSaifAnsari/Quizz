@@ -1,10 +1,10 @@
 package com.saif.myapplication.Model;
 
 public class TestModel {
-   private String testID;
-   private int maxScore,time;
+   private String testID,time;
+   private int maxScore;
 
-    public TestModel(String testID, int maxScore, int time) {
+    public TestModel(String testID, int maxScore, String time) {
         this.testID = testID;
         this.maxScore = maxScore;
         this.time = time;
@@ -26,11 +26,11 @@ public class TestModel {
         this.maxScore = maxScore;
     }
 
-    public int getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }

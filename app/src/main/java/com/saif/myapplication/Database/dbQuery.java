@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.saif.myapplication.Interface.dbCompleteListener;
 import com.saif.myapplication.Model.CategoryModel;
+import com.saif.myapplication.Model.TestModel;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,6 +27,10 @@ public class dbQuery {
     public static FirebaseFirestore firebaseFirestore;
 
     public static ArrayList<CategoryModel> categoryList = new ArrayList<>();
+
+    public static int selected_Category_Index = 0;
+
+    public static ArrayList<TestModel> testList = new ArrayList<>();
 
     public static void createUserData(String name, String email, dbCompleteListener dbListener) {
         Map<String, Object> userData = new ArrayMap<>();
@@ -87,6 +93,35 @@ public class dbQuery {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         completeListener.onFailure();
+                    }
+                });
+    }
+
+
+
+
+    public  static void loadTestList(dbCompleteListener dbCompleteListener){
+        testList.clear();
+
+        firebaseFirestore.collection("Quiz_Category").document(categoryList.get(selected_Category_Index).getCAT_ID()).
+                collection("TESTS").document("TEST_LIST").get().
+                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        int noOfTest = Integer.parseInt(categoryList.get(selected_Category_Index).getNO_OF_TEST());
+
+                        for (int i = 1; i<= noOfTest;i++){
+                            String testId = documentSnapshot.getString("TEST_ID"+ i);
+                            String testTime = documentSnapshot.getString("TEST_TIME"+ i);
+                            testList.add(new TestModel(testId,0,testTime));
+                        }
+                        dbCompleteListener.onSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dbCompleteListener.onFailure();
                     }
                 });
     }

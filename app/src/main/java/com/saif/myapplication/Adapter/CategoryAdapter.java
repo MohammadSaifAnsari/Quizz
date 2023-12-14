@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.saif.myapplication.Activity.TestActivity;
+import com.saif.myapplication.Database.dbQuery;
 import com.saif.myapplication.Model.CategoryModel;
 import com.saif.myapplication.R;
 
@@ -43,7 +44,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TestActivity.class);
-                intent.putExtra("CATEGORY_NAME",holder.getAbsoluteAdapterPosition());
+//                intent.putExtra("CATEGORY_NAME",holder.getAbsoluteAdapterPosition());
+                dbQuery.selected_Category_Index = holder.getAbsoluteAdapterPosition();
                 context.startActivity(intent);
             }
         });
