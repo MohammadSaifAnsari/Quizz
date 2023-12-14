@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.saif.myapplication.Database.dbQuery;
+import com.saif.myapplication.Interface.dbCompleteListener;
 import com.saif.myapplication.Model.UserModel;
 import com.saif.myapplication.databinding.ActivitySignUpBinding;
 
@@ -58,7 +60,34 @@ public class SignUpActivity extends AppCompatActivity {
 
                             String uid = task.getResult().getUser().getUid();
 
+                            //put data in realtime firebase database
                             firebaseDatabase.getReference().child("User").child(uid).setValue(userModel);
+
+                            //put in firestore
+                            dbQuery.createUserData(activitySignUpBinding.textusername.getText().toString(),
+                                    activitySignUpBinding.textEmail.getText().toString(), new dbCompleteListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            dbQuery.loadCategory(new dbCompleteListener() {
+                                                @Override
+                                                public void onSuccess() {
+                                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                    startActivity(intent);
+                                                }
+
+                                                @Override
+                                                public void onFailure() {
+                                                    Toast.makeText(SignUpActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+                                        }
+
+                                        @Override
+                                        public void onFailure() {
+                                            Toast.makeText(SignUpActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                             Toast.makeText(SignUpActivity.this, "User created Successfully", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(SignUpActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();

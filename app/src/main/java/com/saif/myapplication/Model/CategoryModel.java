@@ -1,37 +1,37 @@
 package com.saif.myapplication.Model;
 
 public class CategoryModel {
-    private String name;
-    private  String id;
-    private String noOfTest;
+    private String CAT_ID;
+    private String NAME;
+    private String NO_OF_TESTS;
 
-    public CategoryModel(String name,  String noOfTest) {
-        this.name = name;
-        this.noOfTest = noOfTest;
+    public CategoryModel(String CAT_ID, String NAME, String NO_OF_TESTS) {
+        this.CAT_ID = CAT_ID;
+        this.NAME = NAME;
+        this.NO_OF_TESTS = NO_OF_TESTS;
     }
 
-
-    public String getName() {
-        return name;
+    public String getCAT_ID() {
+        return CAT_ID;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCAT_ID(String CAT_ID) {
+        this.CAT_ID = CAT_ID;
     }
 
-    public String getId() {
-        return id;
+    public String getNAME() {
+        return NAME;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setNAME(String NAME) {
+        this.NAME = NAME;
     }
 
-    public String getNoOfTest() {
-        return noOfTest;
+    public String getNO_OF_TEST() {
+        return NO_OF_TESTS;
     }
 
-    public void setNoOfTest(String noOfTest) {
-        this.noOfTest = noOfTest;
+    public void setNO_OF_TEST(String NO_OF_TEST) {
+        this.NO_OF_TESTS = NO_OF_TEST;
     }
 }

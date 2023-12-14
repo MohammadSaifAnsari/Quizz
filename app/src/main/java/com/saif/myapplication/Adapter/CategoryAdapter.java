@@ -36,8 +36,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CategoryModel categoryModel = categoryList.get(position);
-        holder.cat_name.setText(categoryModel.getName());
-        holder.test_No.setText(categoryModel.getNoOfTest());
+        holder.cat_name.setText(categoryModel.getNAME());
+        holder.test_No.setText(categoryModel.getNO_OF_TEST());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

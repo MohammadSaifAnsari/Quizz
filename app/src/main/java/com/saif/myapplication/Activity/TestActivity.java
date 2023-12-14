@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.saif.myapplication.Adapter.TestAdapter;
+import com.saif.myapplication.Database.dbQuery;
 import com.saif.myapplication.Fragments.HomeFragment;
 import com.saif.myapplication.Model.TestModel;
 import com.saif.myapplication.R;
@@ -28,7 +29,7 @@ public class TestActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         int cat_index = getIntent().getIntExtra("CATEGORY_NAME",0);
-        getSupportActionBar().setTitle(HomeFragment.categoryArrayList.get(cat_index).getName());
+        getSupportActionBar().setTitle(dbQuery.categoryList.get(cat_index).getNAME());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         testList = new ArrayList<>();

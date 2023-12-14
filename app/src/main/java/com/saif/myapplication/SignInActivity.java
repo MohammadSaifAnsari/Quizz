@@ -27,6 +27,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.saif.myapplication.Database.dbQuery;
+import com.saif.myapplication.Interface.dbCompleteListener;
 import com.saif.myapplication.databinding.ActivitySignInBinding;
 
 public class SignInActivity extends AppCompatActivity {
@@ -93,8 +95,21 @@ public class SignInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
-                            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                            startActivity(intent);
+
+
+                            dbQuery.loadCategory(new dbCompleteListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                }
+
+                                @Override
+                                public void onFailure() {
+                                    Toast.makeText(SignInActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                         } else {
                             Toast.makeText(SignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -111,10 +126,7 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-        if (firebaseAuth.getCurrentUser()!= null){
-            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-            startActivity(intent);
-        }
+
 
         activitySignInBinding.googleButton.setOnClickListener(new View.OnClickListener() {
             @Override

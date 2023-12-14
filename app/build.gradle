@@ -63,6 +63,9 @@ dependencies {
     // Add the dependency for the Cloud Storage library
     implementation("com.google.firebase:firebase-storage")
 
+    // Declare the dependency for the Cloud Firestore library
+    implementation("com.google.firebase:firebase-firestore")
+
     // FirebaseUI for Firebase Realtime Database
     implementation 'com.firebaseui:firebase-ui-database:8.0.2'
 
