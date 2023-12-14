@@ -8,6 +8,10 @@ public class UserModel {
         this.userMail = userMail;
         this.userPassword = userPassword;
     }
+    public UserModel(String userName, String userMail) {
+        this.userName = userName;
+        this.userMail = userMail;
+    }
 
     public String getUserName() {
         return userName;

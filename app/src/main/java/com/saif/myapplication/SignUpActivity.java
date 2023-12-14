@@ -68,7 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     activitySignUpBinding.textEmail.getText().toString(), new dbCompleteListener() {
                                         @Override
                                         public void onSuccess() {
-                                            dbQuery.loadCategory(new dbCompleteListener() {
+                                            dbQuery.loadData(new dbCompleteListener() {
                                                 @Override
                                                 public void onSuccess() {
                                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);

@@ -31,7 +31,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (firebaseAuth.getCurrentUser()!= null){
-                    dbQuery.loadCategory(new dbCompleteListener() {
+                    dbQuery.loadData(new dbCompleteListener() {
                         @Override
                         public void onSuccess() {
                             Intent intent = new Intent(SplashActivity.this, MainActivity.class);

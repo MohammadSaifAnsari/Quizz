@@ -12,12 +12,16 @@ import androidx.fragment.app.FragmentTransaction;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.saif.myapplication.Database.dbQuery;
 import com.saif.myapplication.Fragments.HomeFragment;
 import com.saif.myapplication.Fragments.LeaderboardFragment;
 import com.saif.myapplication.Fragments.ProfileFragment;
@@ -27,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding activityMainBinding;
     FirebaseAuth firebaseAuth;
+    TextView name, email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.drawerLayout.addDrawerListener(toggle);
 
         toggle.syncState();
+
+        //setting data from dbquery to header
+
+        View headerView = activityMainBinding.navigationView.getHeaderView(0);
+        name = headerView.findViewById(R.id.curName);
+        name.setText(dbQuery.dbuserModel.getUserName());
+
+        email = headerView.findViewById(R.id.curEmail);
+        email.setText(dbQuery.dbuserModel.getUserMail());
 
         //for navigation drawer
         activityMainBinding.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

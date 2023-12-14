@@ -13,7 +13,8 @@
         android:src="@drawable/applogo">
     </ImageView>
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/curName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:layout_marginTop="6dp"
@@ -21,7 +22,8 @@
         android:text="Name">
     </TextView>
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/curEmail"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:layout_marginTop="6dp"

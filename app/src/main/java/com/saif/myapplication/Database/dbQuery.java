@@ -18,6 +18,7 @@ import com.google.firebase.firestore.WriteBatch;
 import com.saif.myapplication.Interface.dbCompleteListener;
 import com.saif.myapplication.Model.CategoryModel;
 import com.saif.myapplication.Model.TestModel;
+import com.saif.myapplication.Model.UserModel;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -31,6 +32,8 @@ public class dbQuery {
     public static int selected_Category_Index = 0;
 
     public static ArrayList<TestModel> testList = new ArrayList<>();
+
+    public  static UserModel dbuserModel = new UserModel("","");
 
     public static void createUserData(String name, String email, dbCompleteListener dbListener) {
         Map<String, Object> userData = new ArrayMap<>();
@@ -124,6 +127,44 @@ public class dbQuery {
                         dbCompleteListener.onFailure();
                     }
                 });
+    }
+
+
+    public static void getUserData(dbCompleteListener dbCompleteListener){
+        firebaseFirestore.collection("Users").document(FirebaseAuth.getInstance().getUid()).get().
+                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        Log.d("header1234",String.valueOf(documentSnapshot));
+                       String curUserName = documentSnapshot.getString("Name");
+                       String curUserEmail = documentSnapshot.getString("Email_ID");
+                       dbuserModel.setUserName(curUserName);
+                       dbuserModel.setUserMail(curUserEmail);
+
+
+                        dbCompleteListener.onSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dbCompleteListener.onFailure();
+                    }
+                });
+    }
+
+    public  static void loadData(dbCompleteListener dbCompleteListener){
+        dbQuery.loadCategory(new dbCompleteListener() {
+            @Override
+            public void onSuccess() {
+                getUserData(dbCompleteListener);
+            }
+
+            @Override
+            public void onFailure() {
+                dbCompleteListener.onFailure();
+            }
+        });
     }
 
 }

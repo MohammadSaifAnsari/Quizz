@@ -97,7 +97,7 @@ public class SignInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
 
 
-                            dbQuery.loadCategory(new dbCompleteListener() {
+                            dbQuery.loadData(new dbCompleteListener() {
                                 @Override
                                 public void onSuccess() {
                                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
