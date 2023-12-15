@@ -1,6 +1,7 @@
 package com.saif.myapplication.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.saif.myapplication.Activity.QuestionsActivity;
+import com.saif.myapplication.Activity.TestActivity;
+import com.saif.myapplication.Database.dbQuery;
 import com.saif.myapplication.Model.TestModel;
 import com.saif.myapplication.R;
 
@@ -37,6 +41,15 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         holder.testTitle.setText("Test No.:"+String.valueOf(position+1));
         holder.testScore.setText(String.valueOf(testList.get(position).getMaxScore()));
         holder.testProgressBar.setProgress(testList.get(position).getMaxScore());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, QuestionsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
