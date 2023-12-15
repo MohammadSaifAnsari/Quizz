@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.saif.myapplication.Activity.QuestionsActivity;
+import com.saif.myapplication.Activity.StartQuizActivity;
 import com.saif.myapplication.Activity.TestActivity;
 import com.saif.myapplication.Database.dbQuery;
 import com.saif.myapplication.Model.TestModel;
@@ -45,7 +46,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, QuestionsActivity.class);
+
+                dbQuery.selected_Test_Index = holder.getAbsoluteAdapterPosition();
+                Intent intent = new Intent(context, StartQuizActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }

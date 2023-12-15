@@ -17,6 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.saif.myapplication.Interface.dbCompleteListener;
 import com.saif.myapplication.Model.CategoryModel;
+import com.saif.myapplication.Model.QuestionModel;
 import com.saif.myapplication.Model.TestModel;
 import com.saif.myapplication.Model.UserModel;
 
@@ -30,10 +31,12 @@ public class dbQuery {
     public static ArrayList<CategoryModel> categoryList = new ArrayList<>();
 
     public static int selected_Category_Index = 0;
+    public static int selected_Test_Index = 0;
 
     public static ArrayList<TestModel> testList = new ArrayList<>();
 
     public  static UserModel dbuserModel = new UserModel("","");
+    public static ArrayList<QuestionModel> questionList = new ArrayList<>();
 
     public static void createUserData(String name, String email, dbCompleteListener dbListener) {
         Map<String, Object> userData = new ArrayMap<>();
@@ -165,6 +168,33 @@ public class dbQuery {
                 dbCompleteListener.onFailure();
             }
         });
+    }
+
+    public static void loadQuestions(dbCompleteListener dbCompleteListener){
+        firebaseFirestore.collection("QUESTIONS")
+                .whereEqualTo("Category",categoryList.get(selected_Category_Index).getCAT_ID())
+                .whereEqualTo("Test",testList.get(selected_Test_Index).getTestID()).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot documentSnapshot:queryDocumentSnapshots){
+                            questionList.add(new QuestionModel(
+                                    documentSnapshot.getString("Question"),
+                                    documentSnapshot.getString("A"),
+                                    documentSnapshot.getString("B"),
+                                    documentSnapshot.getString("C"),
+                                    documentSnapshot.getString("D"),
+                                    documentSnapshot.getString("Answer")
+                            ));
+                        }
+                        dbCompleteListener.onSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dbCompleteListener.onFailure();
+                    }
+                });
     }
 
 }
