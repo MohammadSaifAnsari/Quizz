@@ -18,6 +18,7 @@
             android:gravity="center"
             android:padding="8dp">
             <TextView
+                android:id="@+id/questionNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1/5"
@@ -25,6 +26,7 @@
                 android:textSize="15sp">
             </TextView>
             <TextView
+                android:id="@+id/timeRemaining"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="13:45"
@@ -32,6 +34,7 @@
                 android:textSize="15sp">
             </TextView>
             <Button
+                android:id="@+id/submitTest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Submit"
@@ -45,6 +48,7 @@
             android:padding="8dp"
             android:gravity="center">
             <TextView
+                android:id="@+id/questionCat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Math"
@@ -53,6 +57,7 @@
             </TextView>
 
             <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/questionBookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -63,6 +68,7 @@
             </androidx.appcompat.widget.AppCompatImageButton>
 
             <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/questionViewList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -73,6 +79,7 @@
             </androidx.appcompat.widget.AppCompatImageButton>
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/questionRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </androidx.recyclerview.widget.RecyclerView>
@@ -87,6 +94,7 @@
         android:gravity="center">
 
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/prevQuestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -96,6 +104,7 @@
             tools:ignore="TouchTargetSizeCheck">
         </androidx.appcompat.widget.AppCompatImageButton>
         <Button
+            android:id="@+id/clearSelectionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CLEAR SELECTION"
@@ -104,6 +113,7 @@
             android:textSize="12sp">
         </Button>
         <Button
+            android:id="@+id/markForReviewButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="MARK FOR REVIEW"
@@ -114,6 +124,7 @@
         </Button>
 
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/nextQuestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
