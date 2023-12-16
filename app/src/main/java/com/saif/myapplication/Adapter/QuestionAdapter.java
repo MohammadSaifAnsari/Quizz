@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.saif.myapplication.Database.dbQuery;
 import com.saif.myapplication.Model.QuestionModel;
 import com.saif.myapplication.R;
 
@@ -19,6 +20,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
 
     Context context;
     ArrayList<QuestionModel> questionList = new ArrayList<>();
+    Button prevSelectedbt = null;
 
     public QuestionAdapter(Context context, ArrayList<QuestionModel> questionList) {
         this.context = context;
@@ -40,6 +42,40 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
         holder.btB.setText(questionModel.getOptionB());
         holder.btC.setText(questionModel.getOptionC());
         holder.btD.setText(questionModel.getOptionD());
+
+
+        optionValue(holder.btA,1,holder.getAbsoluteAdapterPosition());
+        optionValue(holder.btB,2,holder.getAbsoluteAdapterPosition());
+        optionValue(holder.btC,3,holder.getAbsoluteAdapterPosition());
+        optionValue(holder.btD,4,holder.getAbsoluteAdapterPosition());
+
+        holder.btA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedOptions(holder.btA,1,holder.getAbsoluteAdapterPosition());
+            }
+        });
+
+        holder.btB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedOptions(holder.btB,2,holder.getAbsoluteAdapterPosition());
+            }
+        });
+
+        holder.btC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedOptions(holder.btC,3,holder.getAbsoluteAdapterPosition());
+            }
+        });
+
+        holder.btD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedOptions(holder.btD,4,holder.getAbsoluteAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -59,6 +95,41 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
             btB = itemView.findViewById(R.id.optionB);
             btC = itemView.findViewById(R.id.optionC);
             btD = itemView.findViewById(R.id.optionD);
+        }
+    }
+
+    public Button selectedOptions(Button bt,int btIndex,int position){
+        if (prevSelectedbt == null){
+            bt.setBackgroundResource(R.drawable.button_selected);
+            dbQuery.questionList.get(position).setSelectedAnswer(btIndex);
+
+            prevSelectedbt = bt;
+            return prevSelectedbt;
+        }else {
+            if (prevSelectedbt.getId() == bt.getId()){
+                bt.setBackgroundResource(R.drawable.button_unselected);
+
+                dbQuery.questionList.get(position).setSelectedAnswer(-1);
+
+                prevSelectedbt = null;
+                return prevSelectedbt;
+            }else{
+                prevSelectedbt.setBackgroundResource(R.drawable.button_unselected);
+                bt.setBackgroundResource(R.drawable.button_selected);
+
+                dbQuery.questionList.get(position).setSelectedAnswer(btIndex);
+
+                prevSelectedbt= bt;
+                return prevSelectedbt;
+            }
+        }
+    }
+
+    private void optionValue(Button button,int btIndex,int position){
+        if (dbQuery.questionList.get(position).getSelectedAnswer() == btIndex){
+            button.setBackgroundResource(R.drawable.button_selected);
+        }else{
+            button.setBackgroundResource(R.drawable.button_unselected);
         }
     }
 }

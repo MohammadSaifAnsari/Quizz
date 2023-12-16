@@ -24,6 +24,8 @@ public class QuestionsActivity extends AppCompatActivity {
     public int questionCurNo = 0;
 
     public long totalTime = 0;
+
+    QuestionAdapter questionAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +39,7 @@ public class QuestionsActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
         activityQuestionsBinding.questionRecycler.setLayoutManager(linearLayoutManager);
 
-        QuestionAdapter questionAdapter = new QuestionAdapter(getApplicationContext(), dbQuery.questionList);
+        questionAdapter = new QuestionAdapter(getApplicationContext(), dbQuery.questionList);
         activityQuestionsBinding.questionRecycler.setAdapter(questionAdapter);
 
 
@@ -109,5 +111,14 @@ public class QuestionsActivity extends AppCompatActivity {
         };
         countDownTimer.start();
 
+
+        //Clear Selection
+        activityQuestionsBinding.clearSelectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbQuery.questionList.get(questionCurNo).setSelectedAnswer(-1);
+                questionAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

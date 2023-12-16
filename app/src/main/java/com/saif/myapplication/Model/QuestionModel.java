@@ -1,15 +1,17 @@
 package com.saif.myapplication.Model;
 
 public class QuestionModel {
-    String Question,optionA,optionB,optionC,optionD,Answer;
+    private String Question, optionA, optionB, optionC, optionD, answer;
+    private int selectedAnswer;
 
-    public QuestionModel(String question, String optionA, String optionB, String optionC, String optionD, String answer) {
+    public QuestionModel(String question, String optionA, String optionB, String optionC, String optionD, String answer, int selectedAnswer) {
         Question = question;
         this.optionA = optionA;
         this.optionB = optionB;
         this.optionC = optionC;
         this.optionD = optionD;
-        Answer = answer;
+        this.answer = answer;
+        this.selectedAnswer = selectedAnswer;
     }
 
     public String getQuestion() {
@@ -53,10 +55,18 @@ public class QuestionModel {
     }
 
     public String getAnswer() {
-        return Answer;
+        return answer;
     }
 
     public void setAnswer(String answer) {
-        Answer = answer;
+        this.answer = answer;
+    }
+
+    public int getSelectedAnswer() {
+        return selectedAnswer;
+    }
+
+    public void setSelectedAnswer(int selectedAnswer) {
+        this.selectedAnswer = selectedAnswer;
     }
 }

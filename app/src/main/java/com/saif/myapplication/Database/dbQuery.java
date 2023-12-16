@@ -184,7 +184,8 @@ public class dbQuery {
                                     documentSnapshot.getString("B"),
                                     documentSnapshot.getString("C"),
                                     documentSnapshot.getString("D"),
-                                    documentSnapshot.getString("Answer")
+                                    documentSnapshot.getString("Answer"),
+                                    -1
                             ));
                         }
                         dbCompleteListener.onSuccess();
