@@ -2,15 +2,21 @@ package com.saif.myapplication.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 
+import com.saif.myapplication.Adapter.DrawerOuestionAdapter;
 import com.saif.myapplication.Adapter.QuestionAdapter;
 import com.saif.myapplication.Database.dbQuery;
 import com.saif.myapplication.R;
@@ -26,6 +32,7 @@ public class QuestionsActivity extends AppCompatActivity {
     public long totalTime = 0;
 
     QuestionAdapter questionAdapter;
+    DrawerOuestionAdapter drawerOuestionAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +50,14 @@ public class QuestionsActivity extends AppCompatActivity {
         activityQuestionsBinding.questionRecycler.setAdapter(questionAdapter);
 
 
+        //drawer question list adapter
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),4);
+        activityQuestionsBinding.includQuestion.drawerRecycler.setLayoutManager(gridLayoutManager);
+
+        drawerOuestionAdapter = new DrawerOuestionAdapter(getApplicationContext(),dbQuery.questionList.size());
+        activityQuestionsBinding.includQuestion.drawerRecycler.setAdapter(drawerOuestionAdapter);
+
+
 
 
         //Attaching snaoheloer with recycler view
@@ -55,6 +70,16 @@ public class QuestionsActivity extends AppCompatActivity {
                 View view = snapHelper.findSnapView(recyclerView.getLayoutManager());
                 questionCurNo = recyclerView.getLayoutManager().getPosition(view);
 
+                if (dbQuery.questionList.get(questionCurNo).getQuestionStatus() == dbQuery.NOT_VISITED){
+                    dbQuery.questionList.get(questionCurNo).setQuestionStatus(dbQuery.UNANSWERED);
+                }
+
+                if (dbQuery.questionList.get(questionCurNo).getQuestionStatus() == dbQuery.REVIEW){
+                    activityQuestionsBinding.questionBookmark.setVisibility(View.VISIBLE);
+                }else {
+                    activityQuestionsBinding.questionBookmark.setVisibility(View.GONE);
+                }
+
                 activityQuestionsBinding.questionNo.setText(String.valueOf(questionCurNo+1)+"/"+dbQuery.questionList.size());
             }
 
@@ -63,6 +88,9 @@ public class QuestionsActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+
+
+
 
 
 
@@ -120,5 +148,58 @@ public class QuestionsActivity extends AppCompatActivity {
                 questionAdapter.notifyDataSetChanged();
             }
         });
+
+
+        //drawer menu
+        activityQuestionsBinding.questionViewList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!activityQuestionsBinding.questionDrawer.isDrawerOpen(GravityCompat.END)){
+                    drawerOuestionAdapter.notifyDataSetChanged();
+                    activityQuestionsBinding.questionDrawer.openDrawer(GravityCompat.END);
+                }
+            }
+        });
+
+        activityQuestionsBinding.includQuestion.dlClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (activityQuestionsBinding.questionDrawer.isDrawerOpen(GravityCompat.END)){
+                    activityQuestionsBinding.questionDrawer.closeDrawer(GravityCompat.END);
+                }
+            }
+        });
+
+
+
+        //mark for review
+        activityQuestionsBinding.markForReviewButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (activityQuestionsBinding.questionBookmark.getVisibility()!=View.VISIBLE){
+
+                    activityQuestionsBinding.questionBookmark.setVisibility(View.VISIBLE);
+                    dbQuery.questionList.get(questionCurNo).setQuestionStatus(dbQuery.REVIEW);
+
+                }else {
+                    activityQuestionsBinding.questionBookmark.setVisibility(View.GONE);
+                    if (dbQuery.questionList.get(questionCurNo).getSelectedAnswer()!= -1){
+                        dbQuery.questionList.get(questionCurNo).setQuestionStatus(dbQuery.ANSWERED);
+                    }else{
+                        dbQuery.questionList.get(questionCurNo).setQuestionStatus(dbQuery.UNANSWERED);
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    public void goTOOption(int pos){
+        activityQuestionsBinding.questionRecycler.getLayoutManager().scrollToPosition(pos);
+        if (activityQuestionsBinding.questionDrawer.isDrawerOpen(GravityCompat.END)){
+            activityQuestionsBinding.questionDrawer.closeDrawer(GravityCompat.END);
+        }
     }
 }

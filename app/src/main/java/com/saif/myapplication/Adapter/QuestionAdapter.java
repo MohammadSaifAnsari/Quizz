@@ -103,6 +103,8 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
             bt.setBackgroundResource(R.drawable.button_selected);
             dbQuery.questionList.get(position).setSelectedAnswer(btIndex);
 
+            changestatus(position,dbQuery.ANSWERED);
+
             prevSelectedbt = bt;
             return prevSelectedbt;
         }else {
@@ -110,6 +112,8 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
                 bt.setBackgroundResource(R.drawable.button_unselected);
 
                 dbQuery.questionList.get(position).setSelectedAnswer(-1);
+
+                changestatus(position,dbQuery.UNANSWERED);
 
                 prevSelectedbt = null;
                 return prevSelectedbt;
@@ -119,6 +123,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
 
                 dbQuery.questionList.get(position).setSelectedAnswer(btIndex);
 
+                changestatus(position,dbQuery.ANSWERED);
                 prevSelectedbt= bt;
                 return prevSelectedbt;
             }
@@ -130,6 +135,12 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
             button.setBackgroundResource(R.drawable.button_selected);
         }else{
             button.setBackgroundResource(R.drawable.button_unselected);
+        }
+    }
+
+    private void changestatus(int id, int status){
+        if (questionList.get(id).getQuestionStatus() != dbQuery.REVIEW){
+            questionList.get(id).setQuestionStatus(status);
         }
     }
 }

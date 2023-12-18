@@ -38,6 +38,12 @@ public class dbQuery {
     public  static UserModel dbuserModel = new UserModel("","");
     public static ArrayList<QuestionModel> questionList = new ArrayList<>();
 
+    public static final int NOT_VISITED = 0;
+    public static final int ANSWERED = 1;
+    public static final int UNANSWERED = 2;
+    public static final int REVIEW = 3;
+
+
     public static void createUserData(String name, String email, dbCompleteListener dbListener) {
         Map<String, Object> userData = new ArrayMap<>();
         userData.put("Email_ID", email);
@@ -185,7 +191,7 @@ public class dbQuery {
                                     documentSnapshot.getString("C"),
                                     documentSnapshot.getString("D"),
                                     documentSnapshot.getString("Answer"),
-                                    -1
+                                    -1,NOT_VISITED
                             ));
                         }
                         dbCompleteListener.onSuccess();
