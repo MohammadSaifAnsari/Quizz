@@ -55,9 +55,8 @@ public class DrawerOuestionAdapter extends RecyclerView.Adapter<DrawerOuestionAd
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int p = holder.getAbsoluteAdapterPosition();
                 if (context instanceof QuestionsActivity) {
-                     ((QuestionsActivity) context).goTOOption(p );
+                     ((QuestionsActivity) context).goTOOption(holder.getAbsoluteAdapterPosition());
                 }
             }
         });

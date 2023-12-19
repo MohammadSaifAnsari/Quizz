@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="15dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exit Test "
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="22sp">
+    </TextView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom ="10dp"
+        android:background="@color/black">
+    </View>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Do you want to exit Test ?"
+        android:layout_marginBottom ="10dp"
+        android:textColor="@color/black"
+        android:textStyle="normal"
+        android:textSize="18sp">
+    </TextView>
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginTop="15dp">-->
+<!--        <Button-->
+<!--            android:id="@+id/dialogCancel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_alignParentLeft="true"-->
+<!--            android:text="Cancel">-->
+<!--        </Button>-->
+<!--        <Button-->
+<!--            android:id="@+id/dialogOk"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_alignParentRight="true"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:text="OK">-->
+<!--        </Button>-->
+<!--    </RelativeLayout>-->
+
+
+</LinearLayout>

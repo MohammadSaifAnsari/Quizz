@@ -4,8 +4,8 @@
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/drawer_ques_status"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:background="@drawable/baseline_circle_not_visited"
         android:layout_centerInParent="true"
         android:layout_gravity="center">

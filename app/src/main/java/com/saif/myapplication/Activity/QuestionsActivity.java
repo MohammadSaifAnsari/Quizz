@@ -1,20 +1,25 @@
 package com.saif.myapplication.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.widget.Button;
 
 import com.saif.myapplication.Adapter.DrawerOuestionAdapter;
 import com.saif.myapplication.Adapter.QuestionAdapter;
@@ -31,8 +36,11 @@ public class QuestionsActivity extends AppCompatActivity {
 
     public long totalTime = 0;
 
-    QuestionAdapter questionAdapter;
-    DrawerOuestionAdapter drawerOuestionAdapter;
+    private QuestionAdapter questionAdapter;
+    private DrawerOuestionAdapter drawerOuestionAdapter;
+    private LinearLayoutManager linearLayoutManager;
+    private CountDownTimer countDownTimer;
+    AlertDialog alertDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +50,9 @@ public class QuestionsActivity extends AppCompatActivity {
 
         activityQuestionsBinding.questionNo.setText("1/"+String.valueOf(dbQuery.questionList.size()));
         activityQuestionsBinding.questionCat.setText(dbQuery.categoryList.get(dbQuery.selected_Category_Index).getNAME());
+        dbQuery.questionList.get(0).setQuestionStatus(dbQuery.UNANSWERED);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
         activityQuestionsBinding.questionRecycler.setLayoutManager(linearLayoutManager);
 
         questionAdapter = new QuestionAdapter(getApplicationContext(), dbQuery.questionList);
@@ -60,7 +69,7 @@ public class QuestionsActivity extends AppCompatActivity {
 
 
 
-        //Attaching snaoheloer with recycler view
+        //Attaching snaphelper with recycler view
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(activityQuestionsBinding.questionRecycler);
         activityQuestionsBinding.questionRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -119,7 +128,7 @@ public class QuestionsActivity extends AppCompatActivity {
         //Setting countdown Timer
         totalTime = Long.parseLong(dbQuery.testList.get(dbQuery.selected_Test_Index).getTime())*60*1000;
 
-        CountDownTimer countDownTimer = new CountDownTimer(totalTime+1000,1000) {
+        countDownTimer = new CountDownTimer(totalTime+1000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -134,7 +143,9 @@ public class QuestionsActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-
+                Intent intent  = new Intent(QuestionsActivity.this, ScoreActivity.class);
+                startActivity(intent);
+                QuestionsActivity.this.finish();
             }
         };
         countDownTimer.start();
@@ -145,6 +156,8 @@ public class QuestionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dbQuery.questionList.get(questionCurNo).setSelectedAnswer(-1);
+                dbQuery.questionList.get(questionCurNo).setQuestionStatus(dbQuery.UNANSWERED);
+                activityQuestionsBinding.questionBookmark.setVisibility(View.GONE);
                 questionAdapter.notifyDataSetChanged();
             }
         });
@@ -194,10 +207,62 @@ public class QuestionsActivity extends AppCompatActivity {
         });
 
 
+        //submit
+        activityQuestionsBinding.submitTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitTest();
+            }
+        });
+
     }
 
+    private void submitTest(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(QuestionsActivity.this);
+        builder.setCancelable(true);
+
+        View view = getLayoutInflater().inflate(R.layout.alert_dialog_submit_test,null);
+
+        builder.setView(view);
+
+//        builder.setTitle("Exit Test");
+//        builder.setMessage("Do you want to exit Test ?");
+
+
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                countDownTimer.cancel();
+                alertDialog.dismiss();
+
+                Intent intent  = new Intent(QuestionsActivity.this, ScoreActivity.class);
+                startActivity(intent);
+                QuestionsActivity.this.finish();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
     public void goTOOption(int pos){
-        activityQuestionsBinding.questionRecycler.getLayoutManager().scrollToPosition(pos);
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getApplicationContext()) {
+            @Override protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+        smoothScroller.setTargetPosition(pos);
+        linearLayoutManager.startSmoothScroll(smoothScroller);
         if (activityQuestionsBinding.questionDrawer.isDrawerOpen(GravityCompat.END)){
             activityQuestionsBinding.questionDrawer.closeDrawer(GravityCompat.END);
         }
