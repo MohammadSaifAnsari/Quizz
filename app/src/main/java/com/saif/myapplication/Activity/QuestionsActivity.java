@@ -41,6 +41,7 @@ public class QuestionsActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private CountDownTimer countDownTimer;
     AlertDialog alertDialog;
+    private  long timetaken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +133,7 @@ public class QuestionsActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
 
+                timetaken = millisUntilFinished;
                 String time = String.format("%02d:%02d min",
                         TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
@@ -144,6 +146,8 @@ public class QuestionsActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 Intent intent  = new Intent(QuestionsActivity.this, ScoreActivity.class);
+                long totalTime = Long.parseLong(dbQuery.testList.get(dbQuery.selected_Test_Index).getTime())*60*1000;
+                intent.putExtra("TIME_TAKEN_IN_TEST",totalTime-timetaken);
                 startActivity(intent);
                 QuestionsActivity.this.finish();
             }
@@ -238,6 +242,8 @@ public class QuestionsActivity extends AppCompatActivity {
                 alertDialog.dismiss();
 
                 Intent intent  = new Intent(QuestionsActivity.this, ScoreActivity.class);
+                long totalTime = Long.parseLong(dbQuery.testList.get(dbQuery.selected_Test_Index).getTime())*60*1000;
+                intent.putExtra("TIME_TAKEN_IN_TEST",totalTime-timetaken);
                 startActivity(intent);
                 QuestionsActivity.this.finish();
             }

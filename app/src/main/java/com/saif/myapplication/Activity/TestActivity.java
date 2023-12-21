@@ -59,10 +59,19 @@ public class TestActivity extends AppCompatActivity {
         dbQuery.loadTestList(new dbCompleteListener() {
             @Override
             public void onSuccess() {
+                dbQuery.loadMyScore(new dbCompleteListener() {
+                    @Override
+                    public void onSuccess() {
+                        TestAdapter testAdapter = new TestAdapter(getApplicationContext(),dbQuery.testList);
+                        activityTestBinding.testRecyclerView.setAdapter(testAdapter);
+                        progressDialog.dismiss();
+                    }
 
-                TestAdapter testAdapter = new TestAdapter(getApplicationContext(),dbQuery.testList);
-                activityTestBinding.testRecyclerView.setAdapter(testAdapter);
-                progressDialog.dismiss();
+                    @Override
+                    public void onFailure() {
+                        Toast.makeText(TestActivity.this, "Check your Connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override

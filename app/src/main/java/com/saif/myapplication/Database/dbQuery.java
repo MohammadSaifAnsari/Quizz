@@ -14,10 +14,12 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 import com.saif.myapplication.Interface.dbCompleteListener;
 import com.saif.myapplication.Model.CategoryModel;
 import com.saif.myapplication.Model.QuestionModel;
+import com.saif.myapplication.Model.RankModel;
 import com.saif.myapplication.Model.TestModel;
 import com.saif.myapplication.Model.UserModel;
 
@@ -36,6 +38,7 @@ public class dbQuery {
     public static ArrayList<TestModel> testList = new ArrayList<>();
 
     public  static UserModel dbuserModel = new UserModel("","");
+    public  static RankModel rankModel = new RankModel(0,-1);
     public static ArrayList<QuestionModel> questionList = new ArrayList<>();
 
     public static final int NOT_VISITED = 0;
@@ -150,7 +153,7 @@ public class dbQuery {
                        String curUserEmail = documentSnapshot.getString("Email_ID");
                        dbuserModel.setUserName(curUserName);
                        dbuserModel.setUserMail(curUserEmail);
-
+                       rankModel.setScore(Math.toIntExact(documentSnapshot.getLong("TOTAL_SCORE")));
 
                         dbCompleteListener.onSuccess();
                     }
@@ -193,6 +196,68 @@ public class dbQuery {
                                     documentSnapshot.getString("Answer"),
                                     -1,NOT_VISITED
                             ));
+                        }
+                        dbCompleteListener.onSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dbCompleteListener.onFailure();
+                    }
+                });
+    }
+
+    public static void saveScore(int score,dbCompleteListener dbCompleteListener){
+        WriteBatch writeBatch = firebaseFirestore.batch();
+
+        DocumentReference userDoc = firebaseFirestore.collection("Users").document(FirebaseAuth.getInstance().getUid());
+        writeBatch.update(userDoc,"TOTAL_SCORE",score);
+
+        if (score > testList.get(selected_Test_Index).getMaxScore()){
+
+            Log.d("score1234", String.valueOf(score)+testList.get(selected_Test_Index).getMaxScore());
+            DocumentReference scoreDoc = firebaseFirestore.collection("Users").document(FirebaseAuth.getInstance().getUid()).
+                    collection("USER_DATA").document("MY_SCORE");
+
+            Log.d("score1234", String.valueOf(scoreDoc));
+            Map<String,Object> testData = new ArrayMap<>();
+            testData.put(testList.get(selected_Test_Index).getTestID(),score);
+            writeBatch.set(scoreDoc,testData, SetOptions.merge());
+
+        }
+
+        writeBatch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                if (score > testList.get(selected_Test_Index).getMaxScore()){
+                    testList.get(selected_Test_Index).setMaxScore(score);
+                }
+                rankModel.setScore(score);
+                dbCompleteListener.onSuccess();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                dbCompleteListener.onFailure();
+            }
+        });
+    }
+
+
+    public static void loadMyScore(dbCompleteListener dbCompleteListener){
+        firebaseFirestore.collection("Users").document(FirebaseAuth.getInstance().getUid())
+                .collection("USER_DATA").document("MY_SCORE").get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        for (int i = 0;i<testList.size();i++){
+                            int top = 0;
+                            if (documentSnapshot.get(testList.get(i).getTestID())!=null){
+                                top = documentSnapshot.getLong(testList.get(i).getTestID()).intValue();
+                                Log.d("score1234", String.valueOf(top));
+                            }
+                            testList.get(i).setMaxScore(top);
                         }
                         dbCompleteListener.onSuccess();
                     }
