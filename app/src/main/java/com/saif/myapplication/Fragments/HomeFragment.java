@@ -2,6 +2,7 @@ package com.saif.myapplication.Fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.saif.myapplication.Adapter.CategoryAdapter;
 import com.saif.myapplication.Database.dbQuery;
+import com.saif.myapplication.MainActivity;
 import com.saif.myapplication.Model.CategoryModel;
 import com.saif.myapplication.R;
 import com.saif.myapplication.databinding.FragmentHomeBinding;
@@ -28,6 +30,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater,container,false);
 
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar_main);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Categories");
 //        categoryArrayList = new ArrayList<>();
 //        categoryArrayList.add(new CategoryModel("gk","2"));
 //        categoryArrayList.add(new CategoryModel("math","3"));
