@@ -56,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
                             UserModel userModel = new UserModel(activitySignUpBinding.textusername.getText().toString(),
                                     activitySignUpBinding.textEmail.getText().toString(),
-                                    activitySignUpBinding.textpassword.getText().toString());
+                                    activitySignUpBinding.textpassword.getText().toString(),"");
 
                             String uid = task.getResult().getUser().getUid();
 

@@ -37,7 +37,7 @@ public class dbQuery {
 
     public static ArrayList<TestModel> testList = new ArrayList<>();
 
-    public  static UserModel dbuserModel = new UserModel("","");
+    public  static UserModel dbuserModel = new UserModel("","","");
     public  static RankModel rankModel = new RankModel(0,-1);
     public static ArrayList<QuestionModel> questionList = new ArrayList<>();
 
@@ -153,6 +153,13 @@ public class dbQuery {
                        String curUserEmail = documentSnapshot.getString("Email_ID");
                        dbuserModel.setUserName(curUserName);
                        dbuserModel.setUserMail(curUserEmail);
+
+                       if (documentSnapshot.getString("Phone_No")!=null ){
+                           String curUserPhoneNo = documentSnapshot.getString("Phone_No");
+                           dbuserModel.setUserPhoneNo(curUserPhoneNo);
+                       }
+
+
                        rankModel.setScore(Math.toIntExact(documentSnapshot.getLong("TOTAL_SCORE")));
 
                         dbCompleteListener.onSuccess();
@@ -269,4 +276,29 @@ public class dbQuery {
                 });
     }
 
+    public static void saveProfileData(String name ,String phone ,dbCompleteListener dbCompleteListener){
+        Map<String,Object> profileData = new ArrayMap<>();
+        profileData.put("Name",name);
+        if (phone!=null){
+            profileData.put("Phone_No",phone);
+        }
+
+        firebaseFirestore.collection("Users").document(FirebaseAuth.getInstance().getUid())
+                .update(profileData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+
+                        dbuserModel.setUserName(name);
+                        if (phone!= null){
+                            dbuserModel.setUserPhoneNo(phone);
+                        }
+                        dbCompleteListener.onSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dbCompleteListener.onFailure();
+                    }
+                });
+    }
 }

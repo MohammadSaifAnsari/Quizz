@@ -1,16 +1,31 @@
 package com.saif.myapplication.Model;
 
 public class UserModel {
-    String userName,userMail,userID,userPassword;
+    String userName,userMail,userID,userPassword,userPhoneNo;
 
-    public UserModel(String userName, String userMail,  String userPassword) {
+    public UserModel(String userName, String userMail,  String userPassword,String userPhoneNo) {
         this.userName = userName;
         this.userMail = userMail;
         this.userPassword = userPassword;
+        this.userPhoneNo = userPhoneNo;
     }
     public UserModel(String userName, String userMail) {
         this.userName = userName;
         this.userMail = userMail;
+    }
+
+    public UserModel(String userName, String userMail, String userPhoneNo) {
+        this.userName = userName;
+        this.userMail = userMail;
+        this.userPhoneNo = userPhoneNo;
+    }
+
+    public String getUserPhoneNo() {
+        return userPhoneNo;
+    }
+
+    public void setUserPhoneNo(String userPhoneNo) {
+        this.userPhoneNo = userPhoneNo;
     }
 
     public String getUserName() {
