@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.saif.myapplication.Activity.ProfileEditActivity;
 import com.saif.myapplication.Database.dbQuery;
+import com.saif.myapplication.Interface.dbCompleteListener;
 import com.saif.myapplication.MainActivity;
 import com.saif.myapplication.R;
 import com.saif.myapplication.databinding.FragmentProfileBinding;
@@ -36,7 +37,6 @@ public class ProfileFragment extends Fragment {
 
         fragmentProfileBinding.profileUserName.setText(userName);
 
-        fragmentProfileBinding.profileUserScore.setText(String.valueOf(dbQuery.rankModel.getScore()));
 
 
         fragmentProfileBinding.profileToLeaderboard.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +55,49 @@ public class ProfileFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        if (dbQuery.userLeaderboardList.size() == 0){
+            dbQuery.getLeaderboardUsers(new dbCompleteListener() {
+                @Override
+                public void onSuccess() {
+                    if (dbQuery.rankModel.getScore()!= 0){
+                        if (!dbQuery.isCurUserInTopList){
+                            calculateRank();
+                        }
+                        fragmentProfileBinding.profileUserRank.setText(String.valueOf(dbQuery.rankModel.getRank()));
+                        fragmentProfileBinding.profileUserScore.setText(String.valueOf(dbQuery.rankModel.getScore()));
+                    }
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+            });
+        }else {
+            fragmentProfileBinding.profileUserScore.setText(String.valueOf(dbQuery.rankModel.getScore()));
+            if (dbQuery.rankModel.getScore()!=0){
+                fragmentProfileBinding.profileUserRank.setText(String.valueOf(dbQuery.rankModel.getRank()));
+            }
+        }
         return fragmentProfileBinding.getRoot();
+    }
+    private void calculateRank() {
+
+        int lowTopScore = dbQuery.userLeaderboardList.get(dbQuery.userLeaderboardList.size()-1).getScore();
+
+        int remaining_slots = dbQuery.total_users_count-20;
+
+        int mySlot = (dbQuery.rankModel.getScore()*remaining_slots)/lowTopScore;
+
+        int rank;
+
+        if (lowTopScore != dbQuery.rankModel.getScore()){
+            rank = dbQuery.total_users_count-mySlot;
+        }else{
+            rank = 21;
+        }
+
+        dbQuery.rankModel.setRank(rank);
     }
 }

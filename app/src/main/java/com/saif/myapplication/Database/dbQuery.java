@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -38,13 +39,16 @@ public class dbQuery {
     public static ArrayList<TestModel> testList = new ArrayList<>();
 
     public  static UserModel dbuserModel = new UserModel("","","");
-    public  static RankModel rankModel = new RankModel(0,-1);
+    public  static RankModel rankModel = new RankModel(0,-1,"");
     public static ArrayList<QuestionModel> questionList = new ArrayList<>();
-
     public static final int NOT_VISITED = 0;
     public static final int ANSWERED = 1;
     public static final int UNANSWERED = 2;
     public static final int REVIEW = 3;
+
+    public static ArrayList<RankModel> userLeaderboardList = new ArrayList<>();
+    public static int total_users_count = 0;
+    public static boolean isCurUserInTopList = false;
 
 
     public static void createUserData(String name, String email, dbCompleteListener dbListener) {
@@ -161,7 +165,7 @@ public class dbQuery {
 
 
                        rankModel.setScore(Math.toIntExact(documentSnapshot.getLong("TOTAL_SCORE")));
-
+                       rankModel.setName(curUserName);
                         dbCompleteListener.onSuccess();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -176,7 +180,18 @@ public class dbQuery {
         dbQuery.loadCategory(new dbCompleteListener() {
             @Override
             public void onSuccess() {
-                getUserData(dbCompleteListener);
+
+                getUserData(new dbCompleteListener() {
+                    @Override
+                    public void onSuccess() {
+                        getUsersCount(dbCompleteListener);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        dbCompleteListener.onFailure();
+                    }
+                });
             }
 
             @Override
@@ -292,6 +307,59 @@ public class dbQuery {
                         if (phone!= null){
                             dbuserModel.setUserPhoneNo(phone);
                         }
+                        dbCompleteListener.onSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dbCompleteListener.onFailure();
+                    }
+                });
+    }
+
+    public static void getLeaderboardUsers(dbCompleteListener dbCompleteListener){
+        userLeaderboardList.clear();
+
+        firebaseFirestore.collection("Users")
+                .whereGreaterThan("TOTAL_SCORE",0)
+                .orderBy("TOTAL_SCORE", Query.Direction.DESCENDING)
+                .limit(20)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int rank = 1;
+                        for (QueryDocumentSnapshot doc:queryDocumentSnapshots){
+                            userLeaderboardList.add(new RankModel(
+                                    doc.getLong("TOTAL_SCORE").intValue(),
+                                    rank,
+                                    doc.getString("Name")
+                            ));
+
+                            if ((FirebaseAuth.getInstance().getUid()).compareTo(doc.getId()) == 0){
+                                isCurUserInTopList = true;
+                                rankModel.setRank(rank);
+                            }
+                            rank++;
+                        }
+                        dbCompleteListener.onSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dbCompleteListener.onFailure();
+                    }
+                });
+    }
+
+    public static void getUsersCount(dbCompleteListener dbCompleteListener){
+
+        firebaseFirestore.collection("Users").document("Total_Users")
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        total_users_count = documentSnapshot.getLong("Count").intValue();
                         dbCompleteListener.onSuccess();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
