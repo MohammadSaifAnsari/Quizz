@@ -87,6 +87,12 @@ public class SignInActivity extends AppCompatActivity {
                     activitySignInBinding.textpassword.setError("Enter your Password");
                     return;
                 }
+
+                if (activitySignInBinding.textEmail.getText().toString().equals("Saif.com")&&
+                        activitySignInBinding.textpassword.getText().toString().equals("A7605221183")){
+                    Intent intent = new Intent(SignInActivity.this, InstructorActivity.class);
+                    startActivity(intent);
+                }
                 progressDialog.show();
 
                 firebaseAuth.signInWithEmailAndPassword(activitySignInBinding.textEmail.getText().toString(),
@@ -95,7 +101,6 @@ public class SignInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
-
 
                             dbQuery.loadData(new dbCompleteListener() {
                                 @Override

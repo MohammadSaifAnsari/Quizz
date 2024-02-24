@@ -369,4 +369,31 @@ public class dbQuery {
                     }
                 });
     }
+
+    public static void saveQuestion(String category,String question,String answer,String test
+            ,String optionA,String optionB,String optionC,String optionD,dbCompleteListener dbListener ){
+
+        Map<String,Object> questionData = new ArrayMap<>();
+        questionData.put("Category",category);
+        questionData.put("Question",question);
+        questionData.put("Answer",answer);
+        questionData.put("Test",test);
+        questionData.put("A",optionA);
+        questionData.put("B",optionB);
+        questionData.put("C",optionC);
+        questionData.put("D",optionD);
+
+         firebaseFirestore.collection("QUESTIONS").add(questionData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+             @Override
+             public void onSuccess(DocumentReference documentReference) {
+                 dbListener.onSuccess();
+             }
+         }).addOnFailureListener(new OnFailureListener() {
+             @Override
+             public void onFailure(@NonNull Exception e) {
+                 dbListener.onFailure();
+             }
+         });
+
+    }
 }
